@@ -1,5 +1,4 @@
-
-
+namespace Model;
 public class User {
     public required int Id { get; set; }
     public required String Name { get; set; }
