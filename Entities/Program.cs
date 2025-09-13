@@ -1,5 +1,5 @@
 
-User user = new User() {
+User user = new() {
     Id = 4,
     Name = "uwu",
     Password = "uwu",
@@ -7,5 +7,7 @@ User user = new User() {
 
 var post = new Post() {
     Id = 4,
-    Author = user;
+    Author = user,
+    Title = "uwu",
+    Body = "uwu",
 };
