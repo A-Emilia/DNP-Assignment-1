@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Threading.Tasks;
 using ConsoleApplication.UI.ManagePosts;
+using ConsoleApplication.UI.ManageUsers;
 using RepositoryContracts;
 
 namespace ConsoleApplication.UI;
@@ -58,6 +59,13 @@ public class CliApp(IUserRepository userRepository,
                     await postsView.OpenView();
                     break;
                 }
+
+            case CliOptions.ManageUsers: {
+                    Console.Clear();
+                    ManageUsersView userView = new(userRepository);
+                    await userView.OpenView();
+                    break;
+            }
 
             // Figure out a better way to do this.
             default: {

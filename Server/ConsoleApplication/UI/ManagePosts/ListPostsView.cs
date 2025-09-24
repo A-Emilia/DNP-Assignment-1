@@ -11,7 +11,7 @@ public class ListPostView(IPostRepository postRepository) {
         while (true) {
             Console.Clear();
 
-            Console.WriteLine("--- View All Posts ---");
+            Console.WriteLine("--- Viewing All Posts ---");
 
             var res = postRepository.GetManyAsync();
 
