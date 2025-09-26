@@ -8,4 +8,10 @@ public interface IPostRepository {
     Task DeleteAsync(int id);
     Task<Post> GetSingleAsync(int id);
     IQueryable<Post> GetManyAsync();
+
+    Post Add(Post post);
+    void Update(Post post);
+    void Delete(int id);
+    Post GetSingle(int id);
+    IQueryable<Post> GetMany();
 }

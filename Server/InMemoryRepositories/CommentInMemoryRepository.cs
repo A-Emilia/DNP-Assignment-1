@@ -2,8 +2,15 @@
 
 using RepositoryContracts;
 using Model;
+using System.Linq;
+
 public class CommentInMemoryRepository : ICommentRepository {
     private List<Comment> comments = [];
+
+    public Comment Add(Comment comment) {
+        throw new NotImplementedException();
+    }
+
     public Task<Comment> AddAsync(Comment comment) {
         comment.Id = comments.Count != 0
             ? comments.Max(p => p.Id) + 1 
@@ -13,17 +20,29 @@ public class CommentInMemoryRepository : ICommentRepository {
         return Task.FromResult(comment);
     }
 
+    public void Delete(int id) {
+        throw new NotImplementedException();
+    }
+
     public Task DeleteAsync(int id) {
-        Comment? postToRemove = comments.SingleOrDefault(p => p.Id == id)
+        Comment? commentToRemove = comments.SingleOrDefault(p => p.Id == id)
             ?? throw new InvalidOperationException($"Comment with ID '{id}' not found.");
-            
-        comments.Remove(postToRemove);
+
+        comments.Remove(commentToRemove);
 
         return Task.CompletedTask;
     }
 
+    public IQueryable<Comment> GetMany() {
+        throw new NotImplementedException();
+    }
+
     public IQueryable<Comment> GetManyAsync() {
-        return comments.AsQueryable();
+        throw new NotImplementedException();
+    }
+
+    public Comment GetSingle(int id) {
+        throw new NotImplementedException();
     }
 
     public Task<Comment> GetSingleAsync(int id) {
@@ -31,6 +50,10 @@ public class CommentInMemoryRepository : ICommentRepository {
             ?? throw new InvalidOperationException($"Comment with ID '{id}' not found.");
             
         return Task.FromResult(comment);
+    }
+
+    public void Update(Comment comment) {
+        throw new NotImplementedException();
     }
 
     public Task UpdateAsync(Comment comment) {
