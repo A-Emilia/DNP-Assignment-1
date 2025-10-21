@@ -6,10 +6,15 @@ using RepositoryContracts;
 namespace FileRepository;
 
 public class CommentRepository : ICommentRepository {
-    private readonly String filePath = "comment.json";
+
+    private async Task<List<Comment>> GetRepositoryAsync() {
+        String jsonComments = await File.ReadAllTextAsync(filePath);
+        return JsonSerializer.Deserialize<List<Comment>>(jsonComments)!;
+    }
+    private readonly String filePath = "comments.json";
 
     public CommentRepository() {
-        if (!File.Exists(filePath)) File.WriteAllText(filePath, []);
+        if (!File.Exists(filePath)) File.WriteAllText(filePath, "[]");
     }
 
     public Comment Add(Comment comment) {
@@ -17,14 +22,12 @@ public class CommentRepository : ICommentRepository {
     }
 
     public async Task<Comment> AddAsync(Comment comment) {
-        String jsonComments = await File.ReadAllTextAsync(filePath);
-
-        // I should probably not surpress this warning.
-        List<Comment> comments = JsonSerializer.Deserialize<List<Comment>>(jsonComments)!;
+        List<Comment> comments = await GetRepositoryAsync();
         int maxId = comments.Count() > 0 ? comments.Max(c => c.Id) : 1;
         comment.Id = maxId++;
         comments.Add(comment);
-        jsonComments = JsonSerializer.Serialize(comments);
+        String jsonComments = JsonSerializer.Serialize(comments);
+        await File.WriteAllTextAsync(filePath, jsonComments);
 
         return comment;
     }
@@ -34,19 +37,12 @@ public class CommentRepository : ICommentRepository {
     }
 
     public async Task DeleteAsync(int id) {
-        String jsonComments = await File.ReadAllTextAsync(filePath);
-
-        // I should probably not surpress this warning.
-        List<Comment> comments = JsonSerializer.Deserialize<List<Comment>>(jsonComments)!;
+        List<Comment> comments = await GetRepositoryAsync();
 
         int toRemoveId = comments.FindIndex(c => c.Id == id);
-
         if (toRemoveId == -1) throw new InvalidOperationException($"Comment with ID '{id}' not found.");
-
         comments.RemoveAt(toRemoveId);
-
-        jsonComments = JsonSerializer.Serialize(comments);
-
+        String jsonComments = JsonSerializer.Serialize(comments);
         await File.WriteAllTextAsync(filePath, jsonComments);
         
         // DO I NEED TO RETURN??????
@@ -71,10 +67,7 @@ public class CommentRepository : ICommentRepository {
     }
 
     public async Task<Comment> GetSingleAsync(int id) {
-        String jsonComments = await File.ReadAllTextAsync(filePath);
-
-        // I should probably not surpress this warning.
-        List<Comment> comments = JsonSerializer.Deserialize<List<Comment>>(jsonComments)!;
+        List<Comment> comments = await GetRepositoryAsync();
 
         Comment comment = comments.Find(c => c.Id == id)
             ?? throw new InvalidOperationException($"Comment with ID '{id}' not found.");

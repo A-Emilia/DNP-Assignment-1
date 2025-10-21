@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ConsoleApplication.UI.ManagePosts;
 using ConsoleApplication.UI.ManageUsers;
+using FileRepository;
 using RepositoryContracts;
 
 namespace ConsoleApplication.UI;
@@ -18,7 +19,7 @@ public enum CliOptions {
 public class CliApp(IUserRepository userRepository,
                     ICommentRepository commentRepository,
                     IPostRepository postRepository) {
-    public IUserRepository userRepository { get; } = userRepository;
+    public IUserRepository UserRepository { get; } = userRepository;
     public ICommentRepository CommentRepository { get; } = commentRepository;
     public IPostRepository PostRepository { get; } = postRepository;
 
@@ -41,12 +42,9 @@ public class CliApp(IUserRepository userRepository,
 
             var input = Console.ReadLine();
 
-            if (!int.TryParse(input, out var number)) {
-                continue;
-            }
+            if (!int.TryParse(input, out var number)) continue;
             
             var option = (CliOptions) number;
-
             await HandleChoice(option);
         }
     }
@@ -62,10 +60,10 @@ public class CliApp(IUserRepository userRepository,
 
             case CliOptions.ManageUsers: {
                     Console.Clear();
-                    ManageUsersView userView = new(userRepository);
-                    await userView.OpenView();
+                    ManageUsersView usersView = new(UserRepository);
+                    await usersView.OpenView();
                     break;
-            }
+                }
 
             // Figure out a better way to do this.
             default: {
