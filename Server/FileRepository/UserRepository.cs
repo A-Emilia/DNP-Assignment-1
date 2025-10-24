@@ -71,6 +71,17 @@ public class UserRepository : IUserRepository {
         return user;
     }
 
+// Cool solution, not super extensible.
+    public async Task<User> GetSingleAsync<T>(T val) {
+        List<User> users = await GetRepositoryAsync();
+
+        return val switch {
+            String name => users.Find(c => c.Name == name) ?? throw new InvalidOperationException($"User with name '{name}' not found."),
+            int id => users.Find(c => c.Id == id) ?? throw new InvalidOperationException($"User with ID '{id}' not found."),
+            _ => throw new NotImplementedException(),
+        };
+    }
+
     public void Update(User user) {
         throw new NotImplementedException();
     }
