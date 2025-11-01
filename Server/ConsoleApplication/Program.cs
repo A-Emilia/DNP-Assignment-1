@@ -9,5 +9,5 @@ IUserRepository userRepository = new UserRepository();
 ICommentRepository commentRepository = new CommentRepository();
 IPostRepository postRepository = new PostRepository();
 
-CliApp cliApp = new CliApp(userRepository, commentRepository, postRepository);
+CliApp cliApp = new(userRepository, commentRepository, postRepository);
 await cliApp.StartAsync();

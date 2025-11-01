@@ -9,7 +9,7 @@ using RepositoryContracts;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase {
         private readonly IUserRepository userRepo;
@@ -69,6 +69,6 @@ namespace WebAPI.Controllers
 
                 return found;
             }
-        }  
+        }
     }
 }

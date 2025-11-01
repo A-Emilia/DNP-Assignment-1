@@ -4,7 +4,7 @@ using RepositoryContracts;
 using Model;
 using System.Linq;
 
-public class CommentInMemoryRepository : ICommentRepository {
+public class CommentInMemoryRepository {
     private List<Comment> comments = [];
 
     public Comment Add(Comment comment) {

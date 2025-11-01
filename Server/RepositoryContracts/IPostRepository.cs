@@ -7,11 +7,8 @@ public interface IPostRepository {
     Task UpdateAsync(Post post);
     Task DeleteAsync(int id);
     Task<Post> GetSingleAsync(int id);
+    Task<Post> GetSingleAsync(String title);
     IQueryable<Post> GetManyAsync();
-
-    Post Add(Post post);
-    void Update(Post post);
-    void Delete(int id);
-    Post GetSingle(int id);
-    IQueryable<Post> GetMany();
+    IQueryable<Post> GetManyAsync(String title);
+    IQueryable<Post> GetUserPostsAsync(String username);
 }

@@ -17,10 +17,6 @@ public class CommentRepository : ICommentRepository {
         if (!File.Exists(filePath)) File.WriteAllText(filePath, "[]");
     }
 
-    public Comment Add(Comment comment) {
-        throw new NotImplementedException();
-    }
-
     public async Task<Comment> AddAsync(Comment comment) {
         List<Comment> comments = await GetRepositoryAsync();
         int maxId = comments.Count() > 0 ? comments.Max(c => c.Id) : 1;
@@ -32,9 +28,6 @@ public class CommentRepository : ICommentRepository {
         return comment;
     }
 
-    public void Delete(int id) {
-        throw new NotImplementedException();
-    }
 
     public async Task DeleteAsync(int id) {
         List<Comment> comments = await GetRepositoryAsync();
@@ -48,9 +41,6 @@ public class CommentRepository : ICommentRepository {
         // DO I NEED TO RETURN??????
     }
 
-    public IQueryable<Comment> GetMany() {
-        throw new NotImplementedException();
-    }
 
     public IQueryable<Comment> GetManyAsync() {
         /* 
@@ -62,10 +52,6 @@ public class CommentRepository : ICommentRepository {
         return comments.AsQueryable();
     }
 
-    public Comment GetSingle(int id) {
-        throw new NotImplementedException();
-    }
-
     public async Task<Comment> GetSingleAsync(int id) {
         List<Comment> comments = await GetRepositoryAsync();
 
@@ -75,11 +61,17 @@ public class CommentRepository : ICommentRepository {
         return comment;
     }
 
-    public void Update(Comment comment) {
+    public Task UpdateAsync(Comment Comment) {
         throw new NotImplementedException();
     }
 
-    public Task UpdateAsync(Comment Comment) {
-        throw new NotImplementedException();
+    public IQueryable<Comment> GetUserCommentsAsync(String username) {
+        String jsonComments = File.ReadAllTextAsync(filePath).Result;
+        List<Comment> comments = JsonSerializer.Deserialize<List<Comment>>(jsonComments)!;
+
+        comments = comments.FindAll(c => c.Author.Name == username)
+            ?? throw new InvalidOperationException($"User with username '{username}' not found.");
+        
+        return comments.AsQueryable();
     }
 }

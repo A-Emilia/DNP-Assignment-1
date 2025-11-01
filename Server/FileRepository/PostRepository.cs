@@ -18,9 +18,6 @@ public class PostRepository : IPostRepository {
         if (!File.Exists(filePath)) File.WriteAllText(filePath, "[]");
     }
 
-    public Post Add(Post post) {
-        throw new NotImplementedException();
-    }
 
     public async Task<Post> AddAsync(Post post) {
         List<Post> posts = await GetRepositoryAsync();
@@ -33,10 +30,6 @@ public class PostRepository : IPostRepository {
         return post;
     }
 
-    public void Delete(int id) {
-        throw new NotImplementedException();
-    }
-
     public async Task DeleteAsync(int id) {
         List<Post> posts = await GetRepositoryAsync();
 
@@ -47,19 +40,11 @@ public class PostRepository : IPostRepository {
         await File.WriteAllTextAsync(filePath, jsonPosts);
     }
 
-    public IQueryable<Post> GetMany() {
-        throw new NotImplementedException();
-    }
-
     public IQueryable<Post> GetManyAsync() {
         String jsonPosts = File.ReadAllTextAsync(filePath).Result;
         List<Post> posts = JsonSerializer.Deserialize<List<Post>>(jsonPosts)!;
 
         return posts.AsQueryable();
-    }
-
-    public Post GetSingle(int id) {
-        throw new NotImplementedException();
     }
 
     public async Task<Post> GetSingleAsync(int id) {
@@ -71,11 +56,37 @@ public class PostRepository : IPostRepository {
         return post;
     }
 
-    public void Update(Post post) {
-        throw new NotImplementedException();
-    }
 
     public Task UpdateAsync(Post post) {
         throw new NotImplementedException();
+    }
+
+    public async Task<Post> GetSingleAsync(String title) {
+        List<Post> posts = await GetRepositoryAsync();
+
+        Post post = posts.Find(c => c.Title == title)
+            ?? throw new InvalidOperationException($"Post with title '{title}' not found.");
+
+        return post;
+    }
+
+    public IQueryable<Post> GetManyAsync(String title) {
+        String jsonPosts = File.ReadAllTextAsync(filePath).Result;
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(jsonPosts)!;
+
+        posts = posts.FindAll(c => c.Title == title)
+            ?? throw new InvalidOperationException($"Post with title '{title}' not found.");
+
+        return posts.AsQueryable();
+    }
+
+    public IQueryable<Post> GetUserPostsAsync(String username) {
+        String jsonPosts = File.ReadAllTextAsync(filePath).Result;
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(jsonPosts)!;
+
+        posts = posts.FindAll(c => c.Author.Name == username)
+            ?? throw new InvalidOperationException($"User with username '{username}' not found.");
+            
+        return posts.AsQueryable();
     }
 }

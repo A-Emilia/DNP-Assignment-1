@@ -4,7 +4,7 @@ using RepositoryContracts;
 using Model;
 using System.Linq;
 
-public class PostInMemoryRepository : IPostRepository {
+public class PostInMemoryRepository {
     private List<Post> posts = [];
 
     public Post Add(Post post) {

@@ -18,10 +18,6 @@ public class UserRepository : IUserRepository {
         if (!File.Exists(filePath)) File.WriteAllText(filePath, "[]");
     }
 
-    public User Add(User user) {
-        throw new NotImplementedException();
-    }
-
     public async Task<User> AddAsync(User user) {
         List<User> users = await GetRepositoryAsync();
         int maxId = users.Count() > 0 ? users.Max(c => c.Id) : 1;
@@ -31,10 +27,6 @@ public class UserRepository : IUserRepository {
         await File.WriteAllTextAsync(filePath, jsonUsers);
 
         return user;
-    }
-
-    public void Delete(int id) {
-        throw new NotImplementedException();
     }
 
     public async Task DeleteAsync(int id) {
@@ -47,19 +39,11 @@ public class UserRepository : IUserRepository {
         await File.WriteAllTextAsync(filePath, jsonUsers);
     }
 
-    public IQueryable<User> GetMany() {
-        throw new NotImplementedException();
-    }
-
     public IQueryable<User> GetManyAsync() {
         String jsonUsers = File.ReadAllTextAsync(filePath).Result;
         List<User> users = JsonSerializer.Deserialize<List<User>>(jsonUsers)!;
 
         return users.AsQueryable();
-    }
-
-    public User GetSingle(int id) {
-        throw new NotImplementedException();
     }
 
     public async Task<User> GetSingleAsync(int id) {
@@ -72,21 +56,36 @@ public class UserRepository : IUserRepository {
     }
 
 // Cool solution, not super extensible.
-    public async Task<User> GetSingleAsync<T>(T val) {
-        List<User> users = await GetRepositoryAsync();
-
-        return val switch {
-            String name => users.Find(c => c.Name == name) ?? throw new InvalidOperationException($"User with name '{name}' not found."),
-            int id => users.Find(c => c.Id == id) ?? throw new InvalidOperationException($"User with ID '{id}' not found."),
-            _ => throw new NotImplementedException(),
-        };
-    }
-
-    public void Update(User user) {
-        throw new NotImplementedException();
-    }
+//    public async Task<User> GetSingleAsync<T>(T val) {
+//        List<User> users = await GetRepositoryAsync();
+//
+//        return val switch {
+//            String name => users.Find(c => c.Name == name) ?? throw new InvalidOperationException($"User with name '{name}' not found."),
+//            int id => users.Find(c => c.Id == id) ?? throw new InvalidOperationException($"User with ID '{id}' not found."),
+//            _ => throw new NotImplementedException(),
+//        };
+//    }
 
     public Task UpdateAsync(User User) {
         throw new NotImplementedException();
+    }
+
+    public async Task<User> GetSingleAsync(String name) {
+        List<User> users = await GetRepositoryAsync();
+
+        User user = users.Find(c => c.Name == name)
+            ?? throw new InvalidOperationException($"User with name '{name}' not found.");
+
+        return user;
+    }
+
+    public IQueryable<User> GetManyAsync(String name) {
+        String jsonUsers = File.ReadAllTextAsync(filePath).Result;
+        List<User> users = JsonSerializer.Deserialize<List<User>>(jsonUsers)!;
+
+        users = users.FindAll(c => c.Name.Contains(name))
+            ?? throw new InvalidOperationException($"User with name like '{name}' not found.");
+
+        return users.AsQueryable();
     }
 }

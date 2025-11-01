@@ -2,7 +2,7 @@ namespace InMemoryRepositories;
 
 using RepositoryContracts;
 using Model;
-public class UserInMemoryRepository : IUserRepository {
+public class UserInMemoryRepository {
     private List<User> users = [];
 
     public User Add(User user) {

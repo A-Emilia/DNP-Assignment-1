@@ -3,5 +3,6 @@ using System;
 namespace DTOs.UserDTOs;
 
 public class GetUserDTO {
-    public required String SearchParam;
+    public String? name;
+    public int? id;
 }
